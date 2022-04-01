@@ -10,12 +10,14 @@
     direction: incoming
     state: enabled
     policy: allow
+  notify: restart ufw
 
 - name: Enable forwarding - ufw
   lineinfile:
     dest: /etc/default/ufw
     regexp: "^DEFAULT_FORWARD_POLICY="
     line: DEFAULT_FORWARD_POLICY="ACCEPT"
+  notify: restart ufw
 
 - name: Allow incoming VPN connections - ufw
   community.general.ufw:
@@ -23,12 +25,14 @@
     proto: "{{ openvpn_proto }}"
     to_port: "{{ openvpn_port | string }}"
     rule: allow
+  notify: restart ufw
 
 - name: Accept packets from VPN tunnel adaptor - ufw
   community.general.ufw:
     direction: in
     interface: tun0
     rule: allow
+  notify: restart ufw
 
 - name: Setup nat table rules - ufw
   blockinfile:
